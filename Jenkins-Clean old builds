@@ -1,0 +1,54 @@
+HOW TO CLEAN AND RESET JENKINS BUILD HISTORY
+
+When working with Jenkins while building your solution, definitely you have to run your project multiple times.
+It will result to a long Build History list that utilizes lot of diskspace and unnecessary for your production environment.
+
+ If you need to clean this Build History, and reset the build number, you can run a simple script in  Jenkins Script Console. Here are the steps to do so.
+
+1. Go to `Jenkins Script Console`
+Go to your Jenkins home page > Manage Jenkins > Script Console
+
+
+
+2. Run the script to clean and reset
+
+Copy and paste this script to your Console Script text area and change the "Name-of-the-job" to project name( ex : Ceva_Logistics/build_salesbook) that you need to clean the history. Then click the "Run button". 
+
+Also keep reallyDelete=true if you proceed to delete that Job.
+
+// Jenkins job
+def jobName = 'Name-of-the-job'
+// Range of builds to delete
+def rs = Fingerprint.RangeSet.fromString("1-18", false);
+// Set to true to actually delete. Use false to test the script.
+def reallyDelete = false;
+
+// ----------------------------------
+def job = Jenkins.instance.getItemByFullName(jobName);
+println("Job: ${job.fullName}");
+
+def builds = Jenkins.instance.getItemByFullName(jobName).getBuilds(rs);
+println("Found ${builds.size()} builds");
+builds.each{ b-> 
+  if (reallyDelete) {
+    println("Deleting ${b}");
+    b.delete();
+  } else {
+    println("Found match ${b}"); 
+  }
+}
+
+Now check your Build History for the particular project, Wow!, it's clean now!
+
+Reference URL : clear-jenkins-build-history-clear-build
+
+To clear all the failed builds use below script
+
+def jobName = '...'
+
+Jenkins.instance.getItemByFullName(jobName).builds.findAll { it.result == Result.FAILURE}.each { it.delete() }
+
+
+
+
+https://superuser.com/questions/1418885/clear-jenkins-build-history-clear-build-yesterday/1418896#:~:text=3%20Answers&text=Delete%20a%20Jenkins%20build%20via,script%20in%20Jenkins%20Script%20Console
