@@ -1,0 +1,10 @@
+All-Ingress
+Overview:
+Edit
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster.
+Traffic routing is controlled by rules defined on the Ingress resource. An Ingress may be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name-based virtual hosting.
+
+Pre-requisite:
+
+K8’s project URL which consist of ingress manifest.
+Environment/Cluster and the namespace where “all-ingress” needs to be configured.
