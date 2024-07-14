@@ -1,0 +1,215 @@
+
+
+Jenkins Job Deployment Failure Issues
+Last modified by Ashish Kamone on 2024/06/12 11:16
+  
+1. Unable to access application endpoints:
+
+> We need to do the below basic checks
+
+kubectl config get-contexts (List down the contexts)
+
+kubectl config use-context contextname (switch to cluster)
+
+kubectl config use-context –current –namespace namespacename (Go to NS)
+
+kubectl get svc
+
+kubectl describe pods
+
+kubectl get ingress
+
+> We need to verify the ingress URL on both east and west clusters for the requested environment. If we find the same ingress urls (this is the rootcause) then we need to delete/purge the namespace for other clusters, which is not requested by user.
+
+> We need to check service in the ingress file and service in the namespace should match (kubectl get svc)
+
+> Ingress URL must be different for each clusters (east or west)
+
+> We need to check application.properties file and verify the ingress details
+
+> Ask user to check the application endpoints again
+
+2. Unable to promote the Jenkins job
+
+> User has to mention deployment project name in the active directory security group mentioned in the document and email to AD team
+
+http://hum.logistics.corp/xwiki/bin/view/Enterprise%20Architecture%20WIKI/CEVA%20Devops/Jenkins/faq/#HHowdoIgetpromotionaccessforCJF-basedprojects3F
+
+> User has to email AD team in the below format to get added themselves.
+
+TEST:
+ =======
+ GLO-AR-deploy_deployment project_approvers
+add this group to the parent group
+GLO-SA-deploy_deployment project_approvers
+
+STAGE:
+ =====
+GLO-AR-deploy_ deployment project _approvers
+add this group to the parent group
+GLO-SA-deploy_ deployment project _approvers
+
+PROD:
+ =====
+GLO-AR-deploy_ deployment project _approvers
+add this group to the parent group
+GLO-SR-deploy_ deployment project _approvers
+
+Please make a note, a user should be a part of DL_GL_JENKINS_USERS
+
+3. Metadata name: Invalid values: must be no more than 63 characters:
+
+> We need to delete the old releases
+
+> Ask user to suggest new short root project name, we will change the root project name.
+
+> Our resources are creating with the below format. If we keep the long root project name, it will through an error while creating resources when characters exceed more than 63.
+
+     Release name: (ROOT_PROJECT_NAME + DT_DEPLOYMENT_STAGE_WEST) parameters in Jenkins job
+
+            For eg : cal-document-integrator-consumer-isa-stage-west
+
+     For Service: ROOT_PROJECT_NAME + DT_DEPLOYMENT_STAGE_WEST + PROJECT_TYPE ) in Jenkins job
+
+        For eg : cal-document-integrator-consumer-isa-stage-west-cal-app
+
+      For Failoverservice: ROOT_PROJECT_NAME + DT_DEPLOYMENT_STAGE + PROJECT_TYPE )+failover
+
+               For eg : cal-document-integrator-consumer-isa-stage-west-cal-app-failover << It is showing 64 characters.
+
+> We can ask a user to redeploy the Jenkins job again
+
+4. UPGRADE FAILED: "wms-healthcare-jnj-portal-upgrade-stage-east" has no deployed releases
+
+> Get the below details from the user to upgrade the helm release:
+
+Cluster Name
+Namespace name
+Helm release name can be found in the console output
+> We can upgrade the helm release from our end for users using the below link:
+
+https://ci.logistics.corp/job/Helm2to3/build?delay=0sec
+
+kubectl config use-context contextname (switch to cluster)
+
+kubectl config use-context –current –namespace namespacename (Go to NS)
+
+kubectl helm3 list (List down the helm releases)
+
+> We need to get the deployer token from the user for higher environment and configure it. Delete the failed releases before upgrading helm3. If it is showing helm2 in a failed deployment in the console output, we have to purge it using below command.
+
+helm delete <release name> --purge
+
+> We can ask a user to redeploy the Jenkins job again
+
+5. Kubernetes pods are not getting updated after deployment
+
+> This issue is caused due to incorrect configuration in databases.
+
+> We need to verify the database name by logging into Putty and a specific database server
+
+> Check the spelling of the database name in values.yaml file and database server as well. If there is any mismatch, we will ask a user to reach out to the Database Admin to make those changes.
+
+> For cjf-template, user should have init.yaml file with DB details updated
+
+> We need to share the link with user and inform that if your application DB name is app-db-dev, then after the migrations DB name will be changed to app_db_dev i.e all the "-"(hypens) values will be replaced with "_" (underscore) values.
+
+https://hum.logistics.corp/xwiki/bin/view/Enterprise%20Architecture%20WIKI/CEVA%20Devops/DevOps-KB/PG-DB-Server-List/
+
+6. Unable to resolve host opentelemetry-dev-opentelemetry-collector.opentelemetry-dev.svc.cluster.local, cause=java.lang.RuntimeException: java.net.UnknownHostException: opentelemetry-dev-opentelemetry-collector.opentelemetry-dev.svc.cluster.local: Name or service not known
+
+> We need to check whether the user is using the Opentelemetry details of dev env in other environments. If yes, we can share the Opentelemetry documentation with a user to fix this issue from their end:
+
+https://hum.logistics.corp/xwiki/bin/view/Enterprise%20Architecture%20WIKI/CEVA%20Java%20Framework/CJF%20Rest%20Template/Knowledgebase/Opentelemetry%20Integration/
+
+> We can ask a user to redeploy the Jenkins job again
+
+7. New pods are not coming up. Pods are getting restarted due start up probe failures with 401 status code.
+
+> Check the below basic checks:
+
+kubectl config use-context contextname (switch to cluster)
+
+kubectl config use-context –current –namespace namespacename (Go to NS)
+
+kubectl describe pod podname
+
+> We will get all the information proxy details
+
+> We need to check whether the same proxy is being used in different clusters
+
+> We need to remove it and deploy the Jenkins Job
+
+8. Startup probe failed: HTTPS probe failed with status code 500.
+
+> It indicates that the application did not start successfully or returns an error in the healthcheck path (liveness/readiness probe) or the initial delay too early for your app to start.
+
+kubectl config use-context contextname (switch to cluster)
+
+kubectl config use-context –current –namespace namespacename (Go to NS)
+
+kubectl describe pod podname
+
+> Set up Initial delay 2 min for container (Need to update by application team)
+
+> We will ask a user to re-deploy the job from the beginning
+
+9. Startup probe failed: HTTPS probe failed with status code 501.
+
+> It indicates the proxy error in the configuration file. We will ask a user to rebuild the job, it will work
+
+10. Jmeter OOM issues
+
+> Contact Vikash Bharat for proper input
+
+11. If the LB Ingress, Service (east or west) URLs is not working after the configuration.
+
+> User has to update the values.yaml file in below format: 
+
+https://gitlab.logistics.corp/k8s/projects/camunda/-/blob/master/deployments/EUDC-EAST-UAT/values.yaml
+This includes the reflector service defined that helps to route the traffic the east or west based on load. After creating this, user to has to publish the URL at Netscaler level.
+
+> User has to update all information and add their DB details. 
+
+12. Jenkins deployment failed with error:
+
+Error: YAML parse error on cjf-rest-app/templates/deployment.yaml: error converting YAML to JSON: yaml: line 13 mapping values are not allowed in this context
+
+image.png
+
+> We have to check all the parameters while deploying the Jenkins jobs. There should not be any special character in the "DEPLOYMENT CAUSES" field.
+
+> Also, we should compare the values.yaml file with respective CJF project. There should be indentations added as per release notes.
+
+13. Reason: liquibase.exception.DatabaseException: ERROR: function "add_aaf_user" already exists with same argument types [Failed SQL: (0) CREATE TABLE aaf_user
+
+> A user has to remove the existing tables in DB and update DB configuration.
+
+14. The kubernetes pods were not coming up on both USCD west and east cluster
+
+> User was using develop branch for deployments and hence it was throwing an error.
+It is required that while performing deployment in UAT and PROD environments, Release or Master branch needs to be used.
+
+15. Error: deployment "todo-service-demo-cjf-rest-app" exceeded its progress deadline
+
+and event shows: Startup probe failed: Get http://10.233.83.249:8081/actuator/health: dial tcp 10.233.83.249:8081: connect: connection refused
+
+> This is an application end issue, we can confirm with a user whether the deployed health endpoint was exposed or not.
+
+16. Getting below error in deployment
+
+1716884748928-221.png
+
+> First we need to verify the wrapper that user is using. If it is V14 or V15, we need to migrate the helm chart from helm2 to helm3 and delete all the resources (deployment, ingress, service, servicemonitor, hpa) that are mentioned in the error associated to the old helm release.
+
+Note: Always delete the old resources with user permission.
+
+ 
+
+Tags: [+]
+Created by Uday Kumar Kakarla on 2024/04/20 17:21
+Comments (0)
+Attachments (4)
+No comments for this page
+
+XWiki 14.10.4
