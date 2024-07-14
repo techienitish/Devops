@@ -1,0 +1,102 @@
+1.- Objective
+Edit
+GitLab is the open DevOps platform, delivered as a single application. This makes GitLab unique and creates a streamlined software workflow, unlocking your organization from the constraints of a pieced together toolchain. Learn how GitLab offers unmatched visibility and higher levels of efficiency in a single application across the DevOps lifecycle..
+
+What is New in version 16.11.2 release
+
+Make sure to update your database to version 13 or above before updating to GitLab 16.x
+
+Certain releases may require different migrations to be finished before you update to the newer version.
+
+Batched migrations are a migration type available in GitLab 16.0 and later. Background migrations and batched migrations are not the same, so you should check that both are complete before updating. Reference link on background-migrations
+
+Upgrade paths
+Edit
+Upgrading across multiple GitLab versions in one go is only possible by accepting downtime. The following examples assume downtime is acceptable while upgrading. If you don’t want any downtime, read how to upgrade with zero downtime.
+
+For a dynamic view of examples of supported upgrade paths, try the Upgrade Path tool maintained by the GitLab Support team.
+
+Find where your version sits in the upgrade path below, and upgrade GitLab accordingly, while also consulting the version-specific upgrade instructions:
+
+15.11.13 -> 16.1.6 ->  16.3.7 --> 16.7.7--> 16.11.3
+
+2.- Date of the Activity
+Edit
+Date	Time	K8s Cluster	Comments
+Saturday May 18th 2024	
+9AM to 11AM EST
+
+EUDC-EAST	Need to start the upgrade after the confirmation of persistent volume backups from Devops Team and DBA's on database dl-gl-cevavdatabaseadmins@cevalogistics.com  Ticket#CTASK0011223 
+3.- Upgrade Procedure
+Edit
+3.1.- Current and upgraded environment details
+Edit
+App version 	Status	Description
+16.1.6-ce.0	Current	This upgraded version 16.1.6 available on k8s project deployed on : March 18th 2023 10 AM EST Ticket#2023021596020564 
+16.3.7-ce.0	Yet to Plan	 
+16.7.7-ce.0	Yet to Plan	
+ 
+
+16.11.2-ce.0	Yet to Plan	 
+3.2.- Steps to Follow
+Edit
+1. Make sure you are connected to gitlab-ce namespace in EUDC-EAST Cluster. Check the cluster status using this link https://gitlab.logistics.corp/admin/system_info
+
+kubectl config set-context eudc-east --cluster=eudc-east --namespace=gitlab-ce --user=eudc-east
+kubectl config view --minify | grep namespace:
+2. Disable Ingress and take velero incremental backup of namespace including volumes.
+
+k edit ingress <nameoftheingress> 
+#change the service name different which does not exists.
+# Access the URL and make sure it is not accessible
+
+#Take backup and get the status it may take upto 15 mins depends on volume size
+
+velero create backup gitlab-ce-14.10.05-10062023 --include-namespaces=gitlab-ce  --default-volumes-to-restic --storage-location glpdvlapp293  --volume-snapshot-locations glpdvlapp293 --wait
+#get the status
+velero backup describe gitlab-ce-<datetime> --details
+# Make sure there were no errors and timestamp for completion.
+3. Set variables
+
+export DEPLOYMENT_TYPE=EUDC-EAST
+export RELEASE_NAME=gitlab-ce
+export NAMESPACE=gitlab-ce
+env | grep 'DEPLOYMENT_TYPE\|RELEASE_NAME\|NAMESPACE'
+4. Change entire pvc reclaim policy to RETAIN, and request the Storage team to take the backup of existing PV before the upgrade.
+
+kubectl  get pvc | awk '(NR>1){print $3}' > temp-dir.txt 
+while read line; do kubectl patch pv $line -p "{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}"; done < temp-dir.txt
+5. Execute backup script to make a backup of all existing resources. This command gathers information about your GitLab installation and the system it runs on. These may be useful when asking for help or reporting issues.
+
+for n in $(kubectl -n gitlab-ce get -o=name pvc,configmap,ingress,service,secret,deployment)
+do
+    kubectl -n gitlab-ce get  $n -o=yaml > $(dirname $n)_$(basename $n).yaml
+done
+gitlab-ctl status
+
+gitlab-rake gitlab:env:info
+
+gitlab-rake gitlab:check
+6. Scale down all replicas.
+
+kubectl scale deployment.apps/gitlab-ce --replicas=0
+7. Now take the backups of gitlab namespace using velero and also the configuration files.
+
+It is recommended to keep a copy of /etc/gitlab, or at least of /etc/gitlab/gitlab-secrets.json, in a safe place. If you ever need to restore a GitLab application backup you need to also restore gitlab-secrets.json. If you do not, GitLab users who are using two-factor authentication will lose access to your GitLab server and ‘secure variables’ stored in GitLab CI will be lost.
+
+It is not recommended to store your configuration backup in the same place as your application data backup, see below.
+
+8.Execute / upgrade command to install new image. We have to perform rolling upgrades with the below sequence
+
+kubectl --namespace ${NAMESPACE} apply -f deployments/$DEPLOYMENT_TYPE/deployment.yaml --dry-run
+9. Scale up all replicas using below command.
+
+kubectl scale deployment.apps/gitlab-ce --replicas=1
+10. Make sure application comes up and you are able to access the application.
+
+4.- Testing
+Edit
+Access the application - https://gitlab.logistics.corp/
+Build CJF Template jenkins job (This tests Maven repo, Docker repo)
+Build CJF React Template jenkins job (This tests NPM repo, docker repo)
+Finally run the smoke testing 
