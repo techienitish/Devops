@@ -1,0 +1,20 @@
+DB-Patching-Activities
+
+  
+Below are a series of actions to be performed when preparing an upgrade on Gitlab deployment. These steps should be followed sequentially as indicated.
+
+Steps	Upgrade process steps	Owner	Status
+1	Make sure all required configuration documented is well tested in lower environments.	
+2	Make sure all the changes made is working in lower environments. Once done, make sure final version of project is deployed and tested with jenkins.	
+
+
+Done
+3	Send the communication emails to all the Gitlab PROD environment Users 	
+4	Ask Centreon to stop monitoring & DB Teams to perform backups	
+5	Change all PVC's to retain before starting the activity
+6	Execute the Velero backup to take a backup of all existing resources in  PROD environment (in gitlab-ce namespace)	
+7	Execute kubectl deploy command to upgrade to latest image. (While executing we might have to delete some config maps)	
+8	Test all applications which are integrated with Gitlab PROD environment to make sure they are working perfectly.	
+9	Make sure to complete all the smoke tests by user and admin perspective	
+10	Resume Centreon monitoring	
+11	Communication email on Successful upgrade to end-users
