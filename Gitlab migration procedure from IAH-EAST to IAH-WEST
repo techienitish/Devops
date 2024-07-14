@@ -1,0 +1,114 @@
+Gitlab migration procedure from IAH-EAST to IAH-WEST
+Last modified by Uday Kumar Kakarla on 2024/04/20 17:21
+  
+Installation and migration of Gitlab
+Edit
+This page contains the information of the gitlab repo, deployment and migration procedure we followed between two k8s clusters.
+
+Source Project
+Jenkins Job
+Note : Make sure to take the backup of both PVC and Database before starting the migration as a preliminary step.
+
+Current environment details
+K8s cluster	URL	App version 	Image	Database details	Description
+IAH-EAST	https://gitlab-test.kdc.logistics.corp/	13.3.4	gitlab-ce:13.3.4-ce.0	iahlvlpgdbt.logistics.corp (v12.4)	Sandbox for testing
+IAH-WEST	https://gitlab-backup.kdc.logistics.corp/	13.3.4	gitlab-ce:13.3.4-ce.0	iahlvlpgdbt.logistics.corp (v12.4)	Used for migration testing
+GDCKUBE	https://gitlab.logistics.corp/	13.3.4	gitlab-ce:13.3.4-ce.0	glpdvlpgdb117.logistics.corp (v12.4)	Current Production instance
+EUDC-EAST	https://gitlab.logistics.corp/ (Not there yet)	13.3.4	gitlab-ce:13.3.4-ce.0	glpdvlpgdb117.logistics.corp (v12.4)	Migration in progress
+Steps to follow on IAH-EAST as source
+Edit
+1. Namespace is already created and Initialized using Namespace-init chart
+
+    kubectl describe ns gitlab-ce
+
+2. Make sure you are connected to gitlab-ce namespace in iah-east Cluster.
+
+kubectl config set-context iah-east --cluster=iah-east --namespace=gitlab-ce --user=iah-east
+kubectl config view --minify | grep namespace:
+
+3. Change entire pvc reclaim policy to RETAIN, and request the Storage team to take the backup of existing PV before the migration.
+
+kubectl get pv -o go-template='{{ range .items }}{{ if eq .spec.claimRef.namespace  "gitlab-ce" }}{{ .metadata.name }}{{ "\t" }}{{ "\n" }}{{ end }}{{ end }}' | while read line; do kubectl patch pv $line -p "{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}"; done
+
+4. Save the existing deployment,pvc,secret,configmap files by keeping the copy with below command
+
+$   for n in $(kubectl -n gitlab-ce get -o=name pvc,configmap,ingress,service,secret,deployment)
+do
+    kubectl -n gitlab-ce get  $n -o=yaml > $(dirname $n)_$(basename $n).yaml
+done
+
+5. Backup the existing pvc folder data by running the below commands 
+
+1.  kubectl -n gitlab-ce get pvc -ojsonpath='{range .items[*]}{.spec.volumeName}{"\n"}{end}' > pv-names.txt    ( A file will be created to get the names of PVC )
+
+2. while read pv;  do
+kubectl -n gitlab-ce get pv $pv -ojsonpath='{.spec.nfs.path}{"\n"}'
+done < pv-names.txt > source-dir.txt
+
+sed -i 's/\/volume14\/KubeDevEasttNFS/\/iah-east/g' source-dir.txt   (This file contains the names of PVC directories in NFS server in which IAH-EAST K8s cluster data is mounted)
+
+3.while read dir;  do
+tar -cvzf $dir/backup-`date +"%y-%m-%d-%H-%M-%S"`.tgz --exclude=*.tgz --exclude=*.log -C $dir $dir;
+ls -ltrh $dir/backup*
+done < source-dir.txt       (Command 3 should be run on NFS backup server iahlvlcass001 using source-dir.txt file to create backup.tz files and for gdc: glpdvlapp293 is the NFS backup server)
+
+6. Application is running and access the URL : https://gitlab-test.kdc.logistics.corp/
+
+Restore in IAH-WEST as destination cluster
+Edit
+1. Create Namespace and initialize the namespace with namespace-init charts similer to IAH-EAST
+
+    kubectl create ns gitlab-ce
+
+2. Make sure you are connected to gitlab-ce namespace in iah-west Cluster.
+
+kubectl config set-context iah-west --cluster=iah-west --namespace=gitlab-ce --user=iah-west
+kubectl config view --minify | grep namespace:
+
+3. Execute kubectl apply command to install the services and deployments.
+
+kubectl apply -f volumes.yaml
+
+kubectl apply -f ingress.yaml
+
+kubectl  apply -f deployment.yaml ( set the replicas as Zero)
+
+4. Change entire pvc reclaim policy to RETAIN for safer side.
+
+kubectl get pv -o go-template='{{ range .items }}{{ if eq .spec.claimRef.namespace  "gitlab-ce" }}{{ .metadata.name }}{{ "\t" }}{{ "\n" }}{{ end }}{{ end }}' | while read line; do kubectl patch pv $line -p "{\"spec\":{\"persistentVolumeReclaimPolicy\":\"Retain\"}}"; done
+
+5. Collect the existing pvc folder namesby running the below commands 
+
+1.  kubectl -n gitlab-ce get pvc -ojsonpath='{range .items[*]}{.spec.volumeName}{"\n"}{end}' > pv-names.txt    ( A file will be created to get the names of PVC )
+
+2. while read pv;  do
+kubectl -n gitlab-ce get pv $pv -ojsonpath='{.spec.nfs.path}{"\n"}'
+done < pv-names.txt > destination-dir.txt
+
+sed -i 's/\/volume14\/KubeDevWestNFS/\/iah-west/g' destination-dir.txt   (This file contains the names of PVC directories in NFS server in which IAH-WEST K8s cluster data is mounted)
+
+6. Scale down the pods in IAH-EAST source before running this rsync, remove --dry-run while using the below commands on NFS backup server iahlvlcass001 
+
+rsync -avzh --dry-run /iah-east/gitlab-ce-gitlab-config-volume-claim-pvc-8de5075f-2834-418c-b5d2-3b171868eaec /iah-west/gitlab-ce-gitlab-config-volume-claim-pvc-5a641868-8813-4e1f-920c-1a310d2c3914
+
+rsync -avzh --dry-run /iah-east/gitlab-ce-gitlab-logs-volume-claim-pvc-566a2b9f-37a2-4dab-9f52-90be2971fa3f /iah-west/gitlab-ce-gitlab-logs-volume-claim-pvc-c1575367-4d5c-4286-a802-900db3deeda8
+
+rsync -avzh --dry-run /iah-east/gitlab-ce-gitlab-data-volume-claim-pvc-04d728a9-f853-4a97-8e42-877bb4ffad1a /iah-west/gitlab-ce-gitlab-data-volume-claim-pvc-d0b08a00-b923-4f8c-b46d-b5de47024405
+
+7. Now verify the files count after running rsync on both the iah-east and iah-west PVC mount points on NFS backup server iahlvlcass001 with below command, make sure the output is same.
+
+ls -la /iah-east/gitlab-ce-gitlab-data-volume-claim-pvc-04d728a9-f853-4a97-8e42-877bb4ffad1a/ | wc -l
+
+ls -la /iah-west/gitlab-ce-gitlab-data-volume-claim-pvc-d0b08a00-b923-4f8c-b46d-b5de47024405/ | wc -l
+
+8. Scale up the IAH-WEST deployment using the below kubectl commad.
+
+kubectl scale deploy gitlab-ce --replicas=1
+
+9. Finally verify the pods in running status and access the URL : https://gitlab-backup.kdc.logistics.corp/
+
+External references for K8s migrations
+Edit
+URL : https://medium.com/@icheko/migrate-kubernetes-volume-data-f34f71ce5aa5
+
+ 
