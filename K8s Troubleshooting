@@ -3,4 +3,18 @@ https://www.youtube.com/watch?v=1x1O7zspLto -
 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+1 𝐋𝐨𝐚𝐝 𝐨𝐧 𝐨𝐧𝐞 𝐨𝐟 𝐭𝐡𝐞 𝐋𝐢𝐧𝐮𝐱 𝐬𝐞𝐫𝐯𝐞𝐫𝐬 𝐡𝐚𝐬 𝐢𝐧𝐜𝐫𝐞𝐚𝐬𝐞𝐝. 𝐇𝐨𝐰 𝐰𝐢𝐥𝐥 𝐲𝐨𝐮 𝐝𝐞𝐛𝐮𝐠 𝐭𝐡𝐢𝐬 𝐢𝐬𝐬𝐮𝐞 ?
 
+Load averages typically increase due to excessive utilisation of one of combination of the following system resources:
+1. CPU
+2. RAM
+3. Disk
+4. Network
+
+Some of the commands that can be helpful here to find out which resource(s) are under saturation:
+1. top
+2. free -m
+3. vmstat
+4. iostat
+5. sar
+6. dmesg
