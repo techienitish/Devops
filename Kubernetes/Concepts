@@ -1,0 +1,26 @@
+This File will contains the concepts.
+
+This is the shortest and most practical path to excel in the Kubernetes ecosystem:
+
+• Make sure you know everything about Docker starting from reducing the number of layers to multi-stage builds.
+• Know the ins and outs of the Kubernetes Components.
+• Dive into containers and types(side-car and init).
+• Start learning about Pods, Labels-Selectors, ReplicaSet, Deployments(types and use-cases), Probes(Startup, Liveliness, Readiness) and Services(ClusterIP, NodePort, LoadBalancer, Headless).
+• Spend a good time in implementing Ingress, Gateway API and SSL certificates.
+• Explore Namespaces and tweak the scheduling algorithm with Taints, Affinity, TopologySpreadConstraint and more.
+• Fine-tune your workload with precise CPU and Memory consumption, and enable HPA + Autoscaling.
+• Learn about Secret and Cofigmap management.
+• End your learning journey with a couple of days in Observability(Tracing, Profiling, Monitoring, Logging) and Runtime Security.
+
+No matter how many Zero to Hero series you watch, nobody is going to hire you.
+
+A fresher doesn't have enough experience to:
+
+• Extend the Kubernetes API with CRDs.
+• Identify the bottlenecks and improvise the underlying infrastructure.
+• Troubleshoot and Prevent roadblocks.
+• Automate the dev-ops flow and reduce the toil.
+• Define and Create custom metrics.
+• Optimize the Build and Deployment time.
+• Deal with out-of-the-blue problems like ndots.
+
