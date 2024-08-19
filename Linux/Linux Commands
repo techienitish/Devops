@@ -1,0 +1,115 @@
+Linux Commands:
+
+Linux basics
+● Boot process in linux
+● Popular linux distributions
+● Linux architecture
+● System calls
+
+System information
+● uname - is used to display system information. | uname -a : provide all system info like OS + hardware + processor
+● lscpu - provide detailed information about the CPU architecture and the processor's features. Flags = -a /-e /-u etc.
+
+File system navigation
+● File system tree architecture
+● Understanding what each directory in root contains
+● cd - change directory
+● pwd - present working directory
+● ls - list all files & folders
+
+Viewing file content
+● cat - Display File Contents (cat file1 file2 / cat file1)
+
+  > To create a new file and input text into it (end input with Ctrl+D): cat > newfile.txt
+  > To append text to an existing file: cat >> existingfile.txt - press Ctrl+D to save and exit.
+
+● less - 
+● more - 
+● head - 
+● tail - 
+● echo - 
+
+Manipulating files and directories
+● cp
+● mv
+● rm
+● mkdir
+● touch
+● ln
+
+Information about commands
+● type
+● which
+● help
+● man
+● alias
+
+
+Text processing
+● cat
+● grep
+● awk
+● Sed
+● sort
+● uniq
+● cut
+● tr
+● wc
+
+
+I/O redirection
+● Pipe operator
+● How to redirect output and error to a file ?
+● How to take input from a file ?
+
+
+File permissions
+● umask
+● chown
+● chmod
+● chgrp
+● su
+● sudo
+
+
+Process management
+● top
+● ps
+● jobs
+● bg
+● fg
+● kill
+
+Memory management
+● /proc/meminfo
+● free
+● vmstat
+● top
+
+
+File system management
+● locate
+● find
+● du
+● df
+● xargs
+● touch
+● stat
+● file
+● iostat
+
+
+Network management and troubleshooting
+● Application layer - telnet, curl, wget, ssh, sftp, scp, dig, nslookup, rsync
+● Transport layer - nc, tcpdump, netstat(ss)
+● Network layer - ping, traceroute, route, ip addr, iptables, nmap
+● Data link layer - arp
+
+
+Storage devices
+● mount
+● unmount
+● fsck
+● fdisk
+● mkfs
+● dd
