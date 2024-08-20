@@ -113,3 +113,30 @@ Storage devices
 ● fdisk
 ● mkfs
 ● dd
+
+=============================================================================
+
+ls 
+ls -a
+ls -ltr
+ls -ll
+ls -lh
+ps aux
+pstree
+ps -f -u syslog
+
+__________________________________________________
+How to encode in Base 64 ?
+echo Nitsh | base64       >> xyzqhskf
+Decode: echo xyzqhskf | base64 --decode   >> Nitish 
+___________________________________________________
+
+Head & Tail:
+head filename   : will return first 10 Lines of file. 
+tail filename   : will return last 10 lines of file.
+
+Tcp Dump:
+tcpdump -c 2   : number means how many packates you want to capture.
+tcpdump -c 3 -w nitish.txt : it will give output like -> listing on Esp01 
+tcpdump -c 3 >  nitish.txt : dump all the data in the txt file.
+tcpdump -c 5 >> nitish.txt : keep appending in the file. 
