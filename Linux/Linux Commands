@@ -140,3 +140,10 @@ tcpdump -c 2   : number means how many packates you want to capture.
 tcpdump -c 3 -w nitish.txt : it will give output like -> listing on Esp01 
 tcpdump -c 3 >  nitish.txt : dump all the data in the txt file.
 tcpdump -c 5 >> nitish.txt : keep appending in the file. 
+
+crictl
+journalctl
+systemd
+containerD - cric 
+sudo journalctl --since yesterday
+sudo journalctl --since yesterday -o json-pretty
