@@ -24,3 +24,19 @@ A fresher doesn't have enough experience to:
 • Optimize the Build and Deployment time.
 • Deal with out-of-the-blue problems like ndots.
 
+Tech with Prerit :
+-------------------------------------
+| container > pod > node > cluster  |
+-------------------------------------
+
+
+# grpc 
+it is HTTP2 based 
+
+Interview question:
+Ques :: if Api server goes down or master control plane is down will application work or not ?
+Ans:: yes application will keep working as its deployed on worker Node, master node only manages the Worker Node. 
+but if you want to update any thing it will not work. 
+
+
+
