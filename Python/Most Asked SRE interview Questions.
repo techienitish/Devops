@@ -1,0 +1,61 @@
+1. Basic Python Syntax and Concepts
+  What are Python’s built-in data types?
+  How do you handle exceptions in Python?
+  What is the difference between list and tuple?
+  How do you use list comprehensions?
+
+2. File Handling
+How do you read from and write to a file in Python?
+How would you handle large files that don't fit into memory?
+
+3. Data Parsing and Processing
+How would you parse JSON or XML data in Python?
+Can you demonstrate how to work with CSV files in Python?
+
+4. Regular Expressions
+How do you use regular expressions in Python?
+Can you write a regex to match email addresses or IP addresses?
+
+5. Automation and Scripting
+How would you automate a repetitive task using Python?
+Can you write a script to monitor system resources (CPU, memory, disk usage) and send an alert if they exceed certain thresholds?
+
+6. Network Programming
+How do you make HTTP requests in Python?
+Can you use Python to interact with a REST API?
+
+7. Concurrency and Parallelism
+What is the difference between threading and multiprocessing in Python?
+Can you demonstrate how to use Python’s concurrent.futures module?
+
+8. Error Handling and Logging
+How would you implement logging in a Python application?
+How do you handle and log exceptions in a Python script?
+
+9. Performance and Optimization
+How do you profile and optimize Python code?
+Can you identify and address performance bottlenecks in a Python script?
+
+10. Unit Testing and Quality Assurance
+How do you write unit tests in Python?
+Can you explain the use of unittest or pytest?
+
+11. Configuration Management
+How would you handle configuration files in Python?
+Can you demonstrate how to use Python to read and manage configuration settings?
+
+12. Interacting with Databases
+How do you connect to and interact with a SQL database using Python?
+Can you perform basic CRUD operations using Python with an ORM like SQLAlchemy?
+
+13. Integration with Systems and Tools
+How would you use Python to interact with system processes or manage services?
+Can you write a script to automate the deployment of a service or application?
+
+14. Security and Best Practices
+How do you ensure your Python code is secure?
+What are some best practices for writing Python scripts in a production environment?
+
+Example Questions:
+Write a Python script that takes a directory path as input and prints the names of all files and subdirectories in that directory.
+Write a Python script that monitors CPU usage and sends an alert if the usage exceeds 80% for more than 5 minutes.
