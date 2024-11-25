@@ -1,0 +1,22 @@
+GuardDuty 
+
+Amazon GuardDuty is a managed threat detection service in AWS that provides intelligent threat detection and continuous monitoring to protect your AWS accounts, workloads, and data. It uses machine learning, anomaly detection, and integrated threat intelligence to identify and mitigate risks.
+
+Key Features of GuardDuty
+Threat Detection
+
+Identifies potential threats such as compromised accounts, unauthorized access and unusual API calls.
+Monitors network activity, DNS logs, and CloudTrail events.
+
+Data Sources
+GuardDuty integrates with several AWS services for log analysis:
+
+VPC Flow Logs: Monitors traffic patterns in your virtual private cloud.
+AWS CloudTrail: Analyzes API activity across your AWS account.
+DNS Logs: Examines domain name system activity for potential threats.
+Threat Intelligence
+
+Uses built-in intelligence from AWS and third-party providers like Proofpoint and CrowdStrike to detect known malicious IPs and domains.
+Custom threat lists can be added.
+
+
