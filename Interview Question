@@ -9,3 +9,11 @@ You should follow a structure to answer this:
 
 Example:
 I am Nitish Dubey currently working as SRE II and my work is to deliver the end-to-end process Monitoring in an optimized manner. In the last 4 years I have developed expertise in Aws, Kubernetes, and handling CICD operations and recently helped organisation to cut the cost by 30% by developing a lambda function to delete unused EBS volume. I am very passionate about using cloud & Kubernetes and looking forward to it.
+
+DevOps questions to prepare for the interview:
+
+1) A new junior engineer accidentally deleted a production database. What immediate actions would you take, and how would you prevent this from happening again?
+
+2) A new Docker image you pushed is 1GB in size, causing slow deployments. How would you optimize it?
+
+3) Your team accidentally exposed AWS credentials in a public repository. What immediate actions should you take?
