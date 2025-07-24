@@ -32,3 +32,7 @@
 → Your team is stuck firefighting. How would you build a culture of automation and stability?
 
 Real DevOps isn't just tools and YAML. It's owning the system end-to-end. It's being the calm in chaos. It's learning the hard way and still showing up.
+
+
+
+
