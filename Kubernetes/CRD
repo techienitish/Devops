@@ -1,0 +1,2 @@
+**What is CRD**
+A CRD allows you to extend Kubernetes’ API to manage your custom objects in the same way you manage native resources.
