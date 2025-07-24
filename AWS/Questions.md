@@ -1,6 +1,6 @@
 𝐂𝐈/𝐂𝐃 𝐚𝐧𝐝 𝐏𝐢𝐩𝐞𝐥𝐢𝐧𝐞𝐬
-→ Your deployment pipeline frequently fails at random stages. How do you make it more reliable?
-→ The product team wants faster releases, but your builds are slow. How do you speed up without breaking things?
+**→ Your deployment pipeline frequently fails at random stages. How do you make it more reliable?**
+**→ The product team wants faster releases, but your builds are slow. How do you speed up without breaking things?**
 
 𝐈𝐧𝐟𝐫𝐚𝐬𝐭𝐫𝐮𝐜𝐭𝐮𝐫𝐞 𝐚𝐬 𝐂𝐨𝐝𝐞
 → Your Terraform script works in dev but crashes in prod. What’s your next step?
