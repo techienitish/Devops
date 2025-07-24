@@ -1,7 +1,13 @@
 𝐂𝐈/𝐂𝐃 𝐚𝐧𝐝 𝐏𝐢𝐩𝐞𝐥𝐢𝐧𝐞𝐬
-**Q:  Your deployment pipeline frequently fails at random stages. How do you make it more reliable?**
 
-
+**Q:  Your deployment pipeline frequently fails at random stages. How do you make it more reliable & fix this issue ?**
+ 
+- First of all, analyse the logs and identify which stage is failing.
+- Monitor Resource Utilization: Check system resources (memory, CPU, disk space) on CI/CD agents/runners during failures.
+- Validate the availability and stability of external services, APIs, or artifacts involved in the pipeline.
+- Break down the pipeline into smaller, independent stages with clear inputs and outputs
+- Implement automated rollback strategies when a deployment fails to ensure minimal downtime.
+- Use blue/green or canary deployment techniques to reduce the impact of failures.
 
 **Q: The product team wants faster releases, but your builds are slow. How do you speed up without breaking things?**
 
