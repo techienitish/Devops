@@ -1,10 +1,13 @@
 𝐂𝐈/𝐂𝐃 𝐚𝐧𝐝 𝐏𝐢𝐩𝐞𝐥𝐢𝐧𝐞𝐬
-**→ Your deployment pipeline frequently fails at random stages. How do you make it more reliable?**
-**→ The product team wants faster releases, but your builds are slow. How do you speed up without breaking things?**
+**Q:  Your deployment pipeline frequently fails at random stages. How do you make it more reliable?**
+
+
+
+**Q: The product team wants faster releases, but your builds are slow. How do you speed up without breaking things?**
 
 𝐈𝐧𝐟𝐫𝐚𝐬𝐭𝐫𝐮𝐜𝐭𝐮𝐫𝐞 𝐚𝐬 𝐂𝐨𝐝𝐞
 → Your Terraform script works in dev but crashes in prod. What’s your next step?
-→ A junior accidentally deleted critical infra using IaC. How do you prevent this next time?
+→ A junior accidentally deleted critical infrastructure using IaC. How do you prevent this next time?
 
 𝐌𝐨𝐧𝐢𝐭𝐨𝐫𝐢𝐧𝐠 𝐚𝐧𝐝 𝐎𝐛𝐬𝐞𝐫𝐯𝐚𝐛𝐢𝐥𝐢𝐭𝐲
 → A service went down at 2 AM. You weren’t alerted. What would you fix in your monitoring setup?
