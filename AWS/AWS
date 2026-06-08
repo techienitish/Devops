@@ -1,3 +1,15 @@
+The ones you’ll actually see in 𝗿𝗲𝗮𝗹 projects:
+
+• EC2 (virtual servers) 
+• S3 (storage) 
+• IAM (permissions/access) 
+• VPC (networking) 
+• RDS (databases) 
+• Route 53 (DNS) 
+• Load Balancers 
+• CloudWatch (monitoring)
+
+
 GuardDuty 
 
 Amazon GuardDuty is a managed threat detection service in AWS that provides intelligent threat detection and continuous monitoring to protect your AWS accounts, workloads, and data. It uses machine learning, anomaly detection, and integrated threat intelligence to identify and mitigate risks.
